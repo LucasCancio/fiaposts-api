@@ -1,0 +1,27 @@
+services:
+  api:
+    container_name: api
+    image: node:22
+    working_dir: /usr/src/app
+    ports:
+      - "3000:3000"
+    init: true
+    volumes:
+      - .:/usr/src/app
+
+  postgresql:
+    container_name: postgresql
+    image: "bitnami/postgresql:9.6"
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_data:/bitnami/postgresql
+    environment:
+      POSTGRESQL_USER: ${POSTGRESQL_USER}
+      POSTGRESQL_DATABASE: ${POSTGRESQL_DATABASE}
+      POSTGRESQL_PASSWORD: ${POSTGRESQL_PASSWORD}
+
+volumes:
+  postgresql_data:
+    driver: local

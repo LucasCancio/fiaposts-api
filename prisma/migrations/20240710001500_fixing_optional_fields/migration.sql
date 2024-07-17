@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "posts" ALTER COLUMN "imageUrl" DROP NOT NULL,
+ALTER COLUMN "slug" DROP NOT NULL;
