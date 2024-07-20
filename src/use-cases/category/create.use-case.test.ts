@@ -1,10 +1,15 @@
 import { InMemoryCategoryRepository } from "@/repositories/in-memory/category.repository";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { CreateCategoryUseCase } from "./create.use-case";
 
 describe("CreateCategoryUseCase", () => {
-  const repository = new InMemoryCategoryRepository();
-  const useCase = new CreateCategoryUseCase(repository);
+  let repository: InMemoryCategoryRepository;
+  let useCase: CreateCategoryUseCase;
+
+  beforeEach(() => {
+    repository = new InMemoryCategoryRepository();
+    useCase = new CreateCategoryUseCase(repository);
+  });
 
   it("should create category", async () => {
     // Arrange

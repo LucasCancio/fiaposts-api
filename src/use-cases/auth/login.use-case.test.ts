@@ -1,11 +1,16 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { LoginUseCase } from "./login.use-case";
 import { InMemoryTeacherRepository } from "@/repositories/in-memory/teacher.repository";
 import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
 
 describe("Login use case", () => {
-  const repository = new InMemoryTeacherRepository();
-  const useCase = new LoginUseCase(repository);
+  let repository: InMemoryTeacherRepository;
+  let useCase: LoginUseCase;
+
+  beforeEach(() => {
+    repository = new InMemoryTeacherRepository();
+    useCase = new LoginUseCase(repository);
+  });
 
   it("should return an user when the credentials are valid", async () => {
     // Act

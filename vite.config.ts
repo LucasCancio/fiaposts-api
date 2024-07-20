@@ -9,6 +9,8 @@ export default defineConfig({
         "build/**",
         "src/server.ts",
         "src/http/app.ts",
+        "src/lib/**",
+        "src/repositories/**",
         ...coverageConfigDefaults.exclude,
       ],
     },

@@ -5,6 +5,6 @@ export class SearchPostsUseCase {
   constructor(private readonly postRepository: IPostRepository) {}
 
   async handler(dto: SearchPostDTO) {
-    return await this.postRepository.getAll(dto);
+    return await this.postRepository.getAllPaginated(dto);
   }
 }

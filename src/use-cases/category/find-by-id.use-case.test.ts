@@ -1,11 +1,15 @@
 import { InMemoryCategoryRepository } from "@/repositories/in-memory/category.repository";
-import { describe, it, expect } from "vitest";
-import { GetAllCategoriesUseCase } from "./get-all.use-case";
+import { describe, it, expect, beforeEach } from "vitest";
 import { FindCategoryByIdUseCase } from "./find-by-id.use-case";
 
 describe("FindCategoryByIdUseCase", () => {
-  const repository = new InMemoryCategoryRepository();
-  const useCase = new FindCategoryByIdUseCase(repository);
+  let repository: InMemoryCategoryRepository;
+  let useCase: FindCategoryByIdUseCase;
+
+  beforeEach(() => {
+    repository = new InMemoryCategoryRepository();
+    useCase = new FindCategoryByIdUseCase(repository);
+  });
 
   it("should return valid category", async () => {
     // Arrange

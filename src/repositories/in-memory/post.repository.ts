@@ -3,6 +3,7 @@ import { IPostRepository } from "../interfaces/post.repository.interface";
 import { PostWithCategoriesDTO } from "@/dtos/post/post-with-categories.dto";
 import { SearchPostDTO } from "@/dtos/post/search.dto";
 import { InMemoryCategoryRepository } from "./category.repository";
+import { CompletePostDTO } from "@/dtos/post/complete-post.dto";
 
 export class InMemoryPostRepository implements IPostRepository {
   public posts: PostWithCategoriesDTO[] = [
@@ -41,44 +42,29 @@ export class InMemoryPostRepository implements IPostRepository {
     },
   ];
 
-  async getAll(
-    dto: SearchPostDTO | undefined
-  ): Promise<PostWithCategoriesDTO[]> {
-    const {
-      page = 1,
-      perPage = 20,
-      sortBy = "createdAt",
-      order = "desc",
-      title,
-      content,
-    } = dto || {};
+  getAllWithTeachers(): Promise<CompletePostDTO[]> {
+    return Promise.resolve(
+      this.posts.map((post) => {
+        return {
+          ...post,
+          teacher: {
+            id: post.authorId,
+            name: "Teacher",
+            email: "teacher@id",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        } as CompletePostDTO;
+      })
+    );
+  }
 
-    /* const posts = await prisma.post.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: title,
-              mode: "insensitive",
-            },
-          },
-          {
-            content: {
-              contains: content,
-              mode: "insensitive",
-            },
-          },
-        ],
-      },
-      skip: (page - 1) * perPage,
-      take: perPage,
-      orderBy: {
-        [sortBy]: order,
-      },
-      include: IncludeCategoryPrisma,
-    });
- */
+  getAllPaginated(dto?: SearchPostDTO): Promise<PostWithCategoriesDTO[]> {
     throw new Error("Method not implemented.");
+  }
+
+  getAll(): Promise<PostWithCategoriesDTO[]> {
+    return Promise.resolve(this.posts);
   }
 
   async getByCategory(categoryId: number): Promise<PostWithCategoriesDTO[]> {
@@ -107,21 +93,22 @@ export class InMemoryPostRepository implements IPostRepository {
   }
 
   async update(post: Post, categoriesIds: number[]): Promise<Post> {
-    /* prisma.post.update({
-      where: {
-        id: post.id,
-      },
-      data: {
-        content: post.content,
-        title: post.title,
-        slug: post.slug,
-        imageUrl: post.imageUrl,
-        updatedAt: new Date(),
-      },
-    }),
+    const categories = await new InMemoryCategoryRepository().findAllByIds(
+      categoriesIds
+    );
 
-    return updatedPost; */
-    throw new Error("Method not implemented.");
+    this.posts = this.posts.map((p) => {
+      if (p.id === post.id) {
+        return {
+          ...p,
+          ...post,
+          categories,
+        };
+      }
+      return p;
+    });
+
+    return Promise.resolve(post);
   }
 
   async delete(id: number): Promise<boolean> {

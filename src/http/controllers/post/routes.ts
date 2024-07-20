@@ -5,6 +5,7 @@ import { updatePost } from "./update";
 import { getPosts } from "./get-all";
 import { deletePost } from "./delete";
 import { searchPosts } from "./search";
+import { getAdminPosts } from "./admin";
 
 export async function postRoutes(app: FastifyInstance) {
   app.get("/posts", getPosts);
@@ -13,5 +14,5 @@ export async function postRoutes(app: FastifyInstance) {
   app.patch("/posts/:id", updatePost);
   app.delete("/posts/:id", deletePost);
   app.get("/posts/search", searchPosts);
-  //app.get("/posts/admin", ?);//TODO: Fazer
+  app.get("/posts/admin", getAdminPosts);
 }

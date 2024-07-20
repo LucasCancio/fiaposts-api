@@ -3,19 +3,45 @@ import { IPostRepository } from "../interfaces/post.repository.interface";
 import { prisma } from "@/lib/prisma/client";
 import { PostWithCategoriesDTO } from "@/dtos/post/post-with-categories.dto";
 import { SearchPostDTO } from "@/dtos/post/search.dto";
+import { CompletePostDTO } from "@/dtos/post/complete-post.dto";
 
 const IncludeCategoryPrisma = {
   PostCategory: { select: { category: true } },
+};
+
+const IncludeCategoryAndAuthorPrisma = {
+  PostCategory: { select: { category: true } },
+  author: true,
 };
 
 type PrismaPostWithCategory = Prisma.PostGetPayload<{
   include: typeof IncludeCategoryPrisma;
 }>;
 
+type PrismaPostWithCategoryAndAuthor = Prisma.PostGetPayload<{
+  include: typeof IncludeCategoryAndAuthorPrisma;
+}>;
+
 export class PrismaPostRepository implements IPostRepository {
-  async getAll(
-    dto: SearchPostDTO | undefined
-  ): Promise<PostWithCategoriesDTO[]> {
+  async getAllWithTeachers(): Promise<CompletePostDTO[]> {
+    const posts = await prisma.post.findMany({
+      include: IncludeCategoryAndAuthorPrisma,
+    });
+
+    return posts
+      .map((post) => this.convertToCompletePostDTO(post))
+      .filter((post) => post !== null) as CompletePostDTO[];
+  }
+
+  async getAll(): Promise<PostWithCategoriesDTO[]> {
+    const posts = await prisma.post.findMany({
+      include: IncludeCategoryPrisma,
+    });
+
+    return this.convertToPostsDTO(posts);
+  }
+
+  async getAllPaginated(dto?: SearchPostDTO): Promise<PostWithCategoriesDTO[]> {
     const {
       page = 1,
       perPage = 20,
@@ -25,23 +51,32 @@ export class PrismaPostRepository implements IPostRepository {
       content,
     } = dto || {};
 
+    let where: Prisma.PostWhereInput = {
+      OR:
+        title || content
+          ? [
+              {
+                title: title
+                  ? {
+                      contains: title,
+                      mode: "insensitive",
+                    }
+                  : undefined,
+              },
+              {
+                content: content
+                  ? {
+                      contains: content,
+                      mode: "insensitive",
+                    }
+                  : undefined,
+              },
+            ]
+          : undefined,
+    };
+
     const posts = await prisma.post.findMany({
-      where: {
-        OR: [
-          {
-            title: {
-              contains: title,
-              mode: "insensitive",
-            },
-          },
-          {
-            content: {
-              contains: content,
-              mode: "insensitive",
-            },
-          },
-        ],
-      },
+      where,
       skip: (page - 1) * perPage,
       take: perPage,
       orderBy: {
@@ -158,6 +193,31 @@ export class PrismaPostRepository implements IPostRepository {
       categories: post.PostCategory.map((pc) => pc.category) || [],
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
+    };
+  }
+
+  private convertToCompletePostDTO(
+    post: PrismaPostWithCategoryAndAuthor | null
+  ): CompletePostDTO | null {
+    if (!post) return null;
+
+    return {
+      id: post.id,
+      authorId: post.authorId,
+      content: post.content,
+      title: post.title,
+      slug: post.slug,
+      imageUrl: post.imageUrl,
+      categories: post.PostCategory.map((pc) => pc.category) || [],
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      teacher: {
+        id: post.author.id,
+        name: post.author.name,
+        email: post.author.email,
+        createdAt: post.author.createdAt,
+        updatedAt: post.author.updatedAt,
+      },
     };
   }
 }

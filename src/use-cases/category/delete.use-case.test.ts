@@ -1,11 +1,16 @@
 import { InMemoryCategoryRepository } from "@/repositories/in-memory/category.repository";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { DeleteCategoryUseCase } from "./delete.use-case";
 import { ResourceNotFoundError } from "@/errors/resource-not-found-error";
 
 describe("DeleteCategoryUseCase", () => {
-  const repository = new InMemoryCategoryRepository();
-  const useCase = new DeleteCategoryUseCase(repository);
+  let repository: InMemoryCategoryRepository;
+  let useCase: DeleteCategoryUseCase;
+
+  beforeEach(() => {
+    repository = new InMemoryCategoryRepository();
+    useCase = new DeleteCategoryUseCase(repository);
+  });
 
   it("should delete category", async () => {
     // Arrange

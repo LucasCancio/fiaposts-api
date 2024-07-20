@@ -1,12 +1,15 @@
-import { InMemoryCategoryRepository } from "@/repositories/in-memory/category.repository";
-import { describe, it, expect } from "vitest";
-import { GetAllCategoriesUseCase } from "./get-all.use-case";
+import { describe, it, expect, beforeEach } from "vitest";
 import { GetPostsByCategoryUseCase } from "./get-posts.use-case";
 import { InMemoryPostRepository } from "@/repositories/in-memory/post.repository";
 
-describe.skip("GetPostsByCategoryUseCase", () => {
-  const repository = new InMemoryPostRepository();
-  const useCase = new GetPostsByCategoryUseCase(repository);
+describe("GetPostsByCategoryUseCase", () => {
+  let repository: InMemoryPostRepository;
+  let useCase: GetPostsByCategoryUseCase;
+
+  beforeEach(() => {
+    repository = new InMemoryPostRepository();
+    useCase = new GetPostsByCategoryUseCase(repository);
+  });
 
   it("should return all posts that contains specific category", async () => {
     // Arrange
@@ -14,8 +17,13 @@ describe.skip("GetPostsByCategoryUseCase", () => {
 
     // Act
     const posts = await useCase.handler(categoryId);
-    const categoriesFromPosts = posts.map((post) => post.categories);
+    const categoriesIdsFromPosts = posts.map((post) =>
+      post.categories.map((category) => category.id)
+    );
 
     // Assert
+    for (const categories of categoriesIdsFromPosts) {
+      expect(categories).toContain(categoryId);
+    }
   });
 });

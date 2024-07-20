@@ -4,7 +4,7 @@ import { FastifyReply, FastifyRequest } from "fastify";
 
 const publicRoutes = [
   "POST-/login",
-  "POST-/teacher",
+  "POST-/teachers",
   "GET-/posts",
   "GET-/posts/:id",
   "GET-/posts/search",

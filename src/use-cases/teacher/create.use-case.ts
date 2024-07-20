@@ -13,7 +13,7 @@ export class CreateTeacherUseCase {
 
     if (teacherAlreadyExists) throw new ResourceAlreadyExistsError();
 
-    dto.password = (await encryptPassword(dto.password)) ?? "";
+    dto.password = await encryptPassword(dto.password);
 
     return this.teacherRepository.create(dto);
   }

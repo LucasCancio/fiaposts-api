@@ -58,13 +58,18 @@ export class InMemoryTeacherRepository implements ITeacherRepository {
     return Promise.resolve(teacherCreated);
   }
   update(teacher: Teacher): Promise<Teacher> {
-    /* return prisma.teacher.update({
-      where: {
-        id: teacher.id,
-      },
-      data: teacher,
-    }); */
-    throw new Error("Method not implemented.");
+    this.teachers = this.teachers.map((t) => {
+      if (t.id === teacher.id) {
+        return {
+          ...t,
+          ...teacher,
+        };
+      }
+
+      return t;
+    });
+
+    return Promise.resolve(teacher);
   }
 
   async delete(id: number): Promise<boolean> {

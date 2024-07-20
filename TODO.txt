@@ -1,0 +1,6 @@
+TODO:
+
+Colocar testes (teste em Controllers e UseCases, talvez em repos)
+Configurar dockerFile
+Configurar Github CI/CD
+Terminar documentação
