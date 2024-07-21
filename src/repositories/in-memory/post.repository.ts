@@ -6,6 +6,8 @@ import { InMemoryCategoryRepository } from "./category.repository";
 import { CompletePostDTO } from "@/dtos/post/complete-post.dto";
 
 export class InMemoryPostRepository implements IPostRepository {
+  private categories = new InMemoryCategoryRepository().categories;
+
   public posts: PostWithCategoriesDTO[] = [
     {
       id: 1,
@@ -16,7 +18,7 @@ export class InMemoryPostRepository implements IPostRepository {
       slug: "post-1",
       authorId: 1,
       updatedAt: new Date(),
-      categories: [],
+      categories: this.categories,
     },
     {
       id: 2,
@@ -27,7 +29,7 @@ export class InMemoryPostRepository implements IPostRepository {
       slug: "post-2",
       authorId: 1,
       updatedAt: new Date(),
-      categories: [],
+      categories: this.categories,
     },
     {
       id: 3,
@@ -38,7 +40,7 @@ export class InMemoryPostRepository implements IPostRepository {
       slug: "post-3",
       authorId: 2,
       updatedAt: new Date(),
-      categories: [],
+      categories: this.categories,
     },
   ];
 

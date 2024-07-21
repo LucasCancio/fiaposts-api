@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { DeleteTeacherUseCase } from "./delete.use-case";
 import { InMemoryTeacherRepository } from "@/repositories/in-memory/teacher.repository";
+import { ResourceNotFoundError } from "@/errors/resource-not-found-error";
 
 describe("DeleteTeacherUseCase", () => {
   let repository: InMemoryTeacherRepository;
@@ -24,5 +25,16 @@ describe("DeleteTeacherUseCase", () => {
     expect(deleted).toBeTruthy();
     expect(teacherBeforeDelete).not.toBeNull();
     expect(teacherDeleted).toBeNull();
+  });
+
+  it("should throw ResourceNotFoundError when post doesnt exists", async () => {
+    // Arrange
+    const teacherId = 999;
+
+    // Act
+    const deleted = useCase.handler(teacherId);
+
+    // Assert
+    await expect(deleted).rejects.toThrow(ResourceNotFoundError);
   });
 });

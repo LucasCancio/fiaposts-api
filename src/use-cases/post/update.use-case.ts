@@ -15,19 +15,26 @@ export class UpdatePostUseCase {
     if (!post) throw new ResourceNotFoundError(`Post ${id}`);
     if (post.authorId !== teacherId) throw new ForbiddenError();
 
-    const categories = dto.categoriesIds
-      ? await this.categoryRepository.findAllByIds(dto.categoriesIds)
-      : [];
+    let categoriesIds = post.categories.map((c) => c.id);
 
-    if (categories.length !== dto.categoriesIds?.length) {
-      const categoriesNotFound =
-        dto.categoriesIds?.filter(
-          (category) => categories.find((c) => c.id === category) === undefined
-        ) ?? [];
+    if (dto.categoriesIds != null) {
+      const categories = dto.categoriesIds
+        ? await this.categoryRepository.findAllByIds(dto.categoriesIds)
+        : [];
 
-      throw new ResourceNotFoundError(
-        `Categories ${categoriesNotFound.join(", ")}`
-      );
+      if (categories.length !== dto.categoriesIds?.length) {
+        const categoriesNotFound =
+          dto.categoriesIds?.filter(
+            (category) =>
+              categories.find((c) => c.id === category) === undefined
+          ) ?? [];
+
+        throw new ResourceNotFoundError(
+          `Categories ${categoriesNotFound.join(", ")}`
+        );
+      }
+
+      categoriesIds = dto.categoriesIds;
     }
 
     post.content = dto.content || post.content;
@@ -36,9 +43,6 @@ export class UpdatePostUseCase {
     post.slug = dto.slug || post.slug;
     post.updatedAt = new Date();
 
-    return this.postRepository.update(
-      post,
-      dto.categoriesIds || post.categories.map((c) => c.id)
-    );
+    return this.postRepository.update(post, categoriesIds);
   }
 }

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { UpdateTeacherUseCase } from "./update.use-case";
 import { InMemoryTeacherRepository } from "@/repositories/in-memory/teacher.repository";
 import { UpdateTeacherDTO } from "@/dtos/teacher/update.dto";
+import { ResourceNotFoundError } from "@/errors/resource-not-found-error";
 
 describe("UpdateTeacherUseCase", () => {
   let repository: InMemoryTeacherRepository;
@@ -13,6 +14,7 @@ describe("UpdateTeacherUseCase", () => {
   });
 
   it("should update teacher", async () => {
+    // Arrange
     const teacherId = 1;
     const dto: UpdateTeacherDTO = {
       email: "updated@email.com",
@@ -32,6 +34,7 @@ describe("UpdateTeacherUseCase", () => {
   });
 
   it("should update partially", async () => {
+    // Arrange
     const teacherId = 1;
     const dto: UpdateTeacherDTO = {
       name: "Updated Partial Name",
@@ -53,5 +56,19 @@ describe("UpdateTeacherUseCase", () => {
       teacherAfterUpdate?.updatedAt
     );
     expect(teacherAfterUpdate?.name).toBe(dto.name);
+  });
+
+  it("should throw ResourceNotFoundError when teacher doesnt exists", async () => {
+    // Arrange
+    const teacherId = 999;
+    const dto: UpdateTeacherDTO = {
+      name: "Updated Partial Name",
+    };
+
+    // Act
+    const update = useCase.handler(teacherId, dto);
+
+    // Assert
+    await expect(update).rejects.toThrowError(ResourceNotFoundError);
   });
 });

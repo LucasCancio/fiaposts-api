@@ -11,6 +11,8 @@ export default defineConfig({
         "src/http/app.ts",
         "src/lib/**",
         "src/repositories/**",
+        "src/http/**",
+        "prisma/**",
         ...coverageConfigDefaults.exclude,
       ],
     },
