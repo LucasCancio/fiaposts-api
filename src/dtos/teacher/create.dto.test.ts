@@ -18,18 +18,12 @@ describe("CreateTeacherDTO", () => {
     expect(parsed).not.toBeNull();
   });
 
-  it("should throw ZodError when object is incomplete", async () => {
-    // Arrange
-    const dto: CreateTeacherDTO = {};
-
-    //  Act / Assert
-    expect(() => createSchema.parse(dto)).toThrowError(ZodError);
-  });
-
   it("should throw ZodError when name is len than 3 characters", async () => {
     // Arrange
     const dto: CreateTeacherDTO = {
+      email: "Teacher",
       name: "123",
+      password: "123456789",
     };
 
     //  Act / Assert

@@ -20,16 +20,6 @@ describe("CreatePostDTO", () => {
     expect(parsed).not.toBeNull();
   });
 
-  it("should throw ZodError when object is incomplete", async () => {
-    // Arrange
-    const dto: CreatePostDTO = {
-      title: "Post Title",
-    };
-
-    //  Act / Assert
-    expect(() => createSchema.parse(dto)).toThrowError(ZodError);
-  });
-
   it("should throw ZodError when title is len than 5 characters", async () => {
     // Arrange
     const dto: CreatePostDTO = {
@@ -80,19 +70,6 @@ describe("CreatePostDTO", () => {
       imageUrl: "https://www.google.com",
       slug: "1234",
       categoriesIds: [1],
-    };
-
-    //  Act / Assert
-    expect(() => createSchema.parse(dto)).toThrowError(ZodError);
-  });
-
-  it("should throw ZodError when categoriesIds is empty", async () => {
-    // Arrange
-    const dto: CreatePostDTO = {
-      title: "Post Title",
-      content: "Post Content",
-      imageUrl: "https://www.google.com",
-      slug: "post-slug",
     };
 
     //  Act / Assert

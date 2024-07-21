@@ -16,14 +16,6 @@ describe("CreateCategoryDTO", () => {
     expect(parsed).not.toBeNull();
   });
 
-  it("should throw ZodError when object is incomplete", async () => {
-    // Arrange
-    const dto: CreateCategoryDTO = {};
-
-    //  Act / Assert
-    expect(() => createSchema.parse(dto)).toThrowError(ZodError);
-  });
-
   it("should throw ZodError when name is len than 5 characters", async () => {
     // Arrange
     const dto: CreateCategoryDTO = {

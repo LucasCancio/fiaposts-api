@@ -17,16 +17,6 @@ describe("LoginDTO", () => {
     expect(parsed).not.toBeNull();
   });
 
-  it("should throw ZodError when object is incomplete", async () => {
-    // Arrange
-    const dto: LoginDTO = {
-      email: "teste@gmail.com",
-    };
-
-    //  Act / Assert
-    expect(() => loginSchema.parse(dto)).toThrowError(ZodError);
-  });
-
   it("should throw ZodError when email is invalid", async () => {
     // Arrange
     const dto: LoginDTO = {

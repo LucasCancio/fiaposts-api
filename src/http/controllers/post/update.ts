@@ -19,6 +19,7 @@ export async function updatePost(request: FastifyRequest, reply: FastifyReply) {
   const useCase = new UpdatePostUseCase(postRepository, categoryRepository);
 
   const teacherId = request.user.id;
+  console.log(teacherId);
 
   const post = await useCase.handler(id, dto, teacherId);
   return reply.status(200).send(post);
