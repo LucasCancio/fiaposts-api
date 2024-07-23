@@ -1,5 +1,4 @@
 TODO:
 
 Configurar dockerFile
-Configurar Github CI/CD
 Terminar documentação
