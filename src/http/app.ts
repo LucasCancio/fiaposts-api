@@ -9,6 +9,7 @@ import { categoryRoutes } from "./controllers/category/routes";
 import fastifyCookie from "@fastify/cookie";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
+import { definitions } from "@/utils/swagger-definitions";
 
 export const app = fastify();
 
@@ -25,27 +26,48 @@ app.register(fastifyJwt, {
 });
 app.register(fastifyCookie);
 
-// Routes
-app.register(authRoutes);
-app.register(teacherRoutes);
-app.register(postRoutes);
-app.register(categoryRoutes);
-
 // Swagger
 app.register(swagger, {
   swagger: {
     info: {
-      title: "Test swagger",
-      description: "Testing the Fastify swagger API",
-      version: "0.1.0",
+      title: "FIAPosts API",
+      description: "Plataforma de POSTS da faculdade FIAP",
+      version: "1.0.0",
     },
+    tags: [
+      {
+        name: "Auth",
+        description: "Endpoints relacionados a autenticação",
+      },
+      {
+        name: "Teacher",
+        description: "Endpoints relacionados a professores",
+      },
+      {
+        name: "Post",
+        description: "Endpoints relacionados a posts",
+      },
+      {
+        name: "Category",
+        description: "Endpoints relacionados a categorias",
+      },
+    ],
+    definitions,
   },
 });
 app.register(swaggerUI, {
-  routePrefix: "/docs",
+  routePrefix: "/swagger",
   uiConfig: {
     docExpansion: "full",
     deepLinking: false,
+  },
+  uiHooks: {
+    onRequest: function (request, reply, next) {
+      next();
+    },
+    preHandler: function (request, reply, next) {
+      next();
+    },
   },
   staticCSP: true,
   transformStaticCSP: (header) => header,
@@ -56,6 +78,12 @@ app.register(swaggerUI, {
 });
 
 app.setErrorHandler(globalErrorHandler);
+
+// Routes
+app.register(authRoutes);
+app.register(teacherRoutes);
+app.register(postRoutes);
+app.register(categoryRoutes);
 
 app.ready((err) => {
   if (err) throw err;
