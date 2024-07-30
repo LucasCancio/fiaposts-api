@@ -112,17 +112,19 @@ export class PrismaPostRepository implements IPostRepository {
     return this.convertToPostDTO(post);
   }
 
-  create(post: Post, categoriesIds: number[]): Promise<Post> {
-    return prisma.post.create({
-      data: {
-        ...post,
-        PostCategory: {
-          create: categoriesIds.map((categoryId) => ({
-            categoryId,
-          })),
-        },
-      },
+  async create(post: Post, categoriesIds: number[]): Promise<Post> {
+    const created = await prisma.post.create({
+      data: post,
     });
+
+    await prisma.postCategory.createMany({
+      data: categoriesIds.map((categoryId) => ({
+        postId: created.id,
+        categoryId,
+      })),
+    });
+
+    return created;
   }
 
   async update(post: Post, categoriesIds: number[]): Promise<Post> {
@@ -163,11 +165,16 @@ export class PrismaPostRepository implements IPostRepository {
   }
 
   async delete(id: number): Promise<boolean> {
-    return !!(await prisma.post.delete({
-      where: {
-        id,
-      },
-    }));
+    prisma.$transaction([
+      this.deleteCategories(id),
+      prisma.post.delete({
+        where: {
+          id,
+        },
+      }),
+    ]);
+
+    return true;
   }
 
   private convertToPostsDTO(
