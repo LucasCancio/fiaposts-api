@@ -11,8 +11,9 @@ export class UpdateTeacherUseCase {
 
     if (!teacher) throw new ResourceNotFoundError(`Teacher ${id}`);
 
-    teacher.password =
-      (await encryptPassword(dto.password)) ?? teacher.password;
+    teacher.password = !!dto.password?.length
+      ? await encryptPassword(dto.password)
+      : teacher.password;
     teacher.name = dto.name || teacher.name;
     teacher.email = dto.email || teacher.email;
     teacher.updatedAt = new Date();

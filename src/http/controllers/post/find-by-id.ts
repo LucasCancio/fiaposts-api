@@ -16,8 +16,8 @@ export async function findPostById(
   const repository = new PrismaPostRepository();
   const useCase = new FindPostByIdUseCase(repository);
 
-  const teacher = await useCase.handler(id);
-  if (!teacher) return reply.status(404).send();
+  const post = await useCase.handler(id);
+  if (!post) return reply.status(404).send();
 
-  return reply.status(200).send(teacher);
+  return reply.status(200).send(post);
 }

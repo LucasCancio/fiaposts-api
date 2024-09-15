@@ -1,5 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { login } from "./login";
+import { verifyJwt } from "@/http/middlewares/verify-jwt";
+import { profile } from "./profile";
 
 export async function authRoutes(app: FastifyInstance) {
   app.post(
@@ -33,5 +35,12 @@ export async function authRoutes(app: FastifyInstance) {
       },
     },
     login
+  );
+  app.get(
+    "/profile",
+    {
+      onRequest: [verifyJwt],
+    },
+    profile
   );
 }

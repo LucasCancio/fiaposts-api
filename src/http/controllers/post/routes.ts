@@ -40,18 +40,6 @@ export async function postRoutes(app: FastifyInstance) {
       schema: {
         tags: ["Post"],
         summary: "Endpoint para buscar um post pelo ID",
-        response: {
-          200: {
-            type: "object",
-            properties: {
-              id: { type: "string" },
-              title: { type: "string" },
-              content: { type: "string" },
-              createdAt: { type: "string", format: "date-time" },
-              updatedAt: { type: "string", format: "date-time" },
-            },
-          },
-        },
       },
     },
     findPostById

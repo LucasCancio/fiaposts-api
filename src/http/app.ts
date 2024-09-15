@@ -10,8 +10,16 @@ import fastifyCookie from "@fastify/cookie";
 import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import { definitions } from "@/utils/swagger-definitions";
+import cors from "@fastify/cors";
 
 export const app = fastify();
+
+app.register(cors, {
+  origin: (origin, cb) => {
+    cb(null, true);
+  },
+  credentials: true,
+});
 
 // Authentication
 app.register(fastifyJwt, {
