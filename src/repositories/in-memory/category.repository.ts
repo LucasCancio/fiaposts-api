@@ -7,18 +7,21 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
     {
       id: 1,
       name: "Category 1",
+      color: "#FFFFFF",
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       id: 2,
       name: "Category 2",
+      color: "#000000",
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
       id: 3,
       name: "Category 3",
+      color: "#000000",
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -39,6 +42,7 @@ export class InMemoryCategoryRepository implements ICategoryRepository {
       createdAt: new Date(),
       id: this.categories.length + 1,
       name: category.name,
+      color: category.color,
       updatedAt: new Date(),
     };
 

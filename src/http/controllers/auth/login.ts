@@ -13,12 +13,10 @@ export async function login(request: FastifyRequest, reply: FastifyReply) {
 
   const token = await reply.jwtSign({ id: teacher.id, email: teacher.email });
 
-  const sevenDays = new Date(Date.now() + 1000 * 60 * 60 * 24 * 1);
   reply.setCookie("access_token", token, {
     path: "/",
     httpOnly: true,
     secure: true,
-    expires: sevenDays,
   });
 
   return reply.status(200).send({ token });

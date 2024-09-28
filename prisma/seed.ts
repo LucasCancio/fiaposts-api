@@ -1,8 +1,14 @@
 import { encryptPassword } from "@/utils/encrypt-password";
 import { PrismaClient } from "@prisma/client";
+import { capitalize, random } from "lodash";
+import { faker } from "@faker-js/faker";
+
 const prisma = new PrismaClient();
 async function main() {
   console.log("Seeding database...");
+  await prisma.postCategory.deleteMany();
+  await prisma.category.deleteMany();
+  await prisma.post.deleteMany();
 
   await prisma.$transaction([
     //Teachers
@@ -33,6 +39,7 @@ async function main() {
       create: {
         id: 1,
         name: "Dicas de Estudo",
+        color: "#FDD017",
       },
     }),
     prisma.category.upsert({
@@ -41,6 +48,7 @@ async function main() {
       create: {
         id: 2,
         name: "Guia de carreira",
+        color: "#00FF00",
       },
     }),
     prisma.category.upsert({
@@ -49,27 +57,34 @@ async function main() {
       create: {
         id: 3,
         name: "Ciência e Tecnologia",
+        color: "#0000FF",
       },
     }),
   ]);
 
   //Posts
-  await prisma.post.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      id: 1,
-      title: "Como estudar para o ENEM",
-      content:
-        "# Dicas de como estudar para o ENEM\n- Faça um cronograma de estudos\n- Revise as provas anteriores\n- Faça simulados",
-      authorId: 1,
-      PostCategory: {
-        create: {
-          categoryId: 1,
-        },
+  for (let i = 1; i <= 100; i++) {
+    const created = await prisma.post.create({
+      data: {
+        title: capitalize(faker.word.words(4)),
+        slug: faker.lorem.slug(),
+        content: faker.lorem.lines({ min: 10, max: 50 }),
+        imageUrl: faker.image.url(),
+        authorId: random(1, 2),
+        updatedAt: faker.date.past(),
       },
-    },
-  });
+    });
+
+    const quantityCategories = random(1, 3);
+    for (let categoryId = 1; categoryId <= quantityCategories; categoryId++) {
+      await prisma.postCategory.create({
+        data: {
+          categoryId,
+          postId: created.id,
+        },
+      });
+    }
+  }
 }
 main()
   .then(async () => {

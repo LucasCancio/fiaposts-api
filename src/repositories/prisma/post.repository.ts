@@ -2,7 +2,7 @@ import { Post, Prisma } from "@prisma/client";
 import { IPostRepository } from "../interfaces/post.repository.interface";
 import { prisma } from "@/lib/prisma/client";
 import { PostWithCategoriesDTO } from "@/dtos/post/post-with-categories.dto";
-import { SearchPostDTO } from "@/dtos/post/search.dto";
+import { SearchPostDTO, SearchPostOutput } from "@/dtos/post/search.dto";
 import { CompletePostDTO } from "@/dtos/post/complete-post.dto";
 
 const IncludeCategoryPrisma = {
@@ -41,7 +41,10 @@ export class PrismaPostRepository implements IPostRepository {
     return this.convertToPostsDTO(posts);
   }
 
-  async getAllPaginated(dto?: SearchPostDTO): Promise<PostWithCategoriesDTO[]> {
+  async getAllPaginated(
+    dto?: SearchPostDTO,
+    authorId?: number
+  ): Promise<SearchPostOutput> {
     const {
       page = 1,
       perPage = 20,
@@ -73,19 +76,30 @@ export class PrismaPostRepository implements IPostRepository {
               },
             ]
           : undefined,
+      AND: authorId ? { authorId } : undefined,
     };
 
-    const posts = await prisma.post.findMany({
+    const allPostsFiltered = await prisma.post.findMany({
       where,
-      skip: (page - 1) * perPage,
-      take: perPage,
+      //skip: (page - 1) * perPage,
+      //take: perPage,
       orderBy: {
         [sortBy]: order,
       },
-      include: IncludeCategoryPrisma,
+      include: IncludeCategoryAndAuthorPrisma,
     });
 
-    return this.convertToPostsDTO(posts);
+    return {
+      posts: this.convertToCompletePostsDTO(
+        allPostsFiltered.slice((page - 1) * perPage, page * perPage)
+      ),
+      meta: {
+        page,
+        pageIndex: page - 1,
+        perPage,
+        totalCount: allPostsFiltered.length,
+      },
+    };
   }
 
   async getByCategory(categoryId: number): Promise<PostWithCategoriesDTO[]> {
@@ -102,19 +116,25 @@ export class PrismaPostRepository implements IPostRepository {
     return this.convertToPostsDTO(posts);
   }
 
-  async findById(id: number): Promise<PostWithCategoriesDTO | null> {
+  async findById(id: number): Promise<CompletePostDTO | null> {
     const post = await prisma.post.findUnique({
       where: {
         id,
       },
-      include: IncludeCategoryPrisma,
+      include: IncludeCategoryAndAuthorPrisma,
     });
-    return this.convertToPostDTO(post);
+    return this.convertToCompletePostDTO(post);
   }
 
   async create(post: Post, categoriesIds: number[]): Promise<Post> {
     const created = await prisma.post.create({
-      data: post,
+      data: {
+        content: post.content,
+        title: post.title,
+        slug: post.slug,
+        imageUrl: post.imageUrl,
+        authorId: post.authorId,
+      },
     });
 
     await prisma.postCategory.createMany({
@@ -201,6 +221,14 @@ export class PrismaPostRepository implements IPostRepository {
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
     };
+  }
+
+  private convertToCompletePostsDTO(
+    posts: PrismaPostWithCategoryAndAuthor[]
+  ): CompletePostDTO[] {
+    return posts
+      .map((post) => this.convertToCompletePostDTO(post))
+      .filter((post) => post !== null);
   }
 
   private convertToCompletePostDTO(

@@ -1,7 +1,7 @@
 import { Post } from "@prisma/client";
 import { IPostRepository } from "../interfaces/post.repository.interface";
 import { PostWithCategoriesDTO } from "@/dtos/post/post-with-categories.dto";
-import { SearchPostDTO } from "@/dtos/post/search.dto";
+import { SearchPostDTO, SearchPostOutput } from "@/dtos/post/search.dto";
 import { InMemoryCategoryRepository } from "./category.repository";
 import { CompletePostDTO } from "@/dtos/post/complete-post.dto";
 
@@ -61,7 +61,7 @@ export class InMemoryPostRepository implements IPostRepository {
     );
   }
 
-  getAllPaginated(dto?: SearchPostDTO): Promise<PostWithCategoriesDTO[]> {
+  getAllPaginated(dto?: SearchPostDTO): Promise<SearchPostOutput> {
     throw new Error("Method not implemented.");
   }
 

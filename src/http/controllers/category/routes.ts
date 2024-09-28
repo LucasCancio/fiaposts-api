@@ -13,18 +13,6 @@ export async function categoryRoutes(app: FastifyInstance) {
       schema: {
         tags: ["Category"],
         summary: "Endpoint para buscar todas as categorias",
-        response: {
-          200: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                id: { type: "number" },
-                name: { type: "string" },
-              },
-            },
-          },
-        },
       },
     },
     getCategories

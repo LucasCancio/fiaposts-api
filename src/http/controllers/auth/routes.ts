@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { login } from "./login";
 import { verifyJwt } from "@/http/middlewares/verify-jwt";
 import { profile } from "./profile";
+import { logout } from "./logout";
 
 export async function authRoutes(app: FastifyInstance) {
   app.post(
@@ -43,4 +44,5 @@ export async function authRoutes(app: FastifyInstance) {
     },
     profile
   );
+  app.post("/logout", logout);
 }

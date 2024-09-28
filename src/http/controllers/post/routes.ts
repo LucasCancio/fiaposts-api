@@ -7,6 +7,7 @@ import { deletePost } from "./delete";
 import { searchPosts } from "./search";
 import { getAdminPosts } from "./admin";
 import { verifyJwt } from "@/http/middlewares/verify-jwt";
+import { myPosts } from "./my-posts";
 
 export async function postRoutes(app: FastifyInstance) {
   app.get(
@@ -120,6 +121,13 @@ export async function postRoutes(app: FastifyInstance) {
       },
     },
     searchPosts
+  );
+  app.get(
+    "/posts/my-posts",
+    {
+      onRequest: [verifyJwt],
+    },
+    myPosts
   );
   app.get(
     "/posts/admin",

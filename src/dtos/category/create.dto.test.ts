@@ -7,6 +7,7 @@ describe("CreateCategoryDTO", () => {
     // Arrange
     const dto: CreateCategoryDTO = {
       name: "Category Name",
+      color: "#FFFFFF",
     };
 
     // Act
@@ -20,6 +21,7 @@ describe("CreateCategoryDTO", () => {
     // Arrange
     const dto: CreateCategoryDTO = {
       name: "123",
+      color: "#FFFFFF",
     };
 
     //  Act / Assert

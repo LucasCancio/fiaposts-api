@@ -14,9 +14,10 @@ describe("CreateCategoryUseCase", () => {
   it("should create category", async () => {
     // Arrange
     const name = "Category fake";
+    const color = "#FFFFFF";
 
     // Act
-    const category = await useCase.handler({ name });
+    const category = await useCase.handler({ name, color });
 
     // Assert
     expect(category).not.toBeNull();

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { PostWithCategoriesDTO } from "./post-with-categories.dto";
+import { CompletePostDTO } from "./complete-post.dto";
 
 export const searchSchema = z.object({
   title: z.string().optional(),
@@ -17,3 +19,13 @@ export const searchSchema = z.object({
 });
 
 export type SearchPostDTO = z.infer<typeof searchSchema>;
+
+export type SearchPostOutput = {
+  meta: {
+    page: number;
+    pageIndex: number;
+    perPage: number;
+    totalCount: number;
+  };
+  posts: CompletePostDTO[];
+};
