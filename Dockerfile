@@ -28,11 +28,5 @@ RUN pnpm build
 # Exposing server port
 EXPOSE 3010
 
-# Migrations
-RUN npm run prisma:migrate
-
-# Seeding
-RUN npm run prisma:seed
-
 # Starting the server
 CMD ["npm", "start"]

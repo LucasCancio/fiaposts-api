@@ -1,11 +1,18 @@
 services:
-  app:
-    image: fiaposts
+  fiaposts-api:
+    image: fiaposts-api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     ports:
       - "3010:3010"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/fiaposts
       - JWT_SECRET=fiap@2024
+    command: >
+      bash -c "npm run prisma:migrate &&
+               npm run prisma:seed &&
+               npm run start"
     depends_on:
       - db
 
