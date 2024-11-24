@@ -1,15 +1,30 @@
+import { PrismaStudentRepository } from "@/repositories/prisma/student.repository";
 import { PrismaTeacherRepository } from "@/repositories/prisma/teacher.repository";
+import { FindStudentByIdUseCase } from "@/use-cases/student/find-by-id.use-case";
 import { FindTeacherByIdUseCase } from "@/use-cases/teacher/find-by-id.use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
+  const { id: loggedUserId, isTeacher } = request.user;
+
+  const user = await (isTeacher
+    ? findTeacherById(loggedUserId)
+    : findStudentById(loggedUserId));
+  if (!user) return reply.status(404).send();
+
+  return reply.status(200).send({ ...user, isTeacher });
+}
+
+function findTeacherById(id: number) {
   const repository = new PrismaTeacherRepository();
   const useCase = new FindTeacherByIdUseCase(repository);
 
-  const loggedUserId = request.user.id;
+  return useCase.handler(id);
+}
 
-  const teacher = await useCase.handler(loggedUserId);
-  if (!teacher) return reply.status(404).send();
+function findStudentById(id: number) {
+  const repository = new PrismaStudentRepository();
+  const useCase = new FindStudentByIdUseCase(repository);
 
-  return reply.status(200).send(teacher);
+  return useCase.handler(id);
 }

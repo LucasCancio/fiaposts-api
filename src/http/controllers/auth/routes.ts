@@ -17,6 +17,7 @@ export async function authRoutes(app: FastifyInstance) {
           properties: {
             email: { type: "string", format: "email" },
             password: { type: "string" },
+            isTeacher: { type: "boolean" },
           },
         },
         response: {

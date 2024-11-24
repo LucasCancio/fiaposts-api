@@ -1,4 +1,4 @@
-import { CreateTeacherDTO } from "@/dtos/teacher/create.dto";
+import { CreateUserDTO } from "@/dtos/user/create.dto";
 import { ResourceAlreadyExistsError } from "@/errors/resource-already-exists-error";
 import { ITeacherRepository } from "@/repositories/interfaces/teacher.repository.interface";
 import { encryptPassword } from "@/utils/encrypt-password";
@@ -6,7 +6,7 @@ import { encryptPassword } from "@/utils/encrypt-password";
 export class CreateTeacherUseCase {
   constructor(private readonly teacherRepository: ITeacherRepository) {}
 
-  async handler(dto: CreateTeacherDTO) {
+  async handler(dto: CreateUserDTO) {
     const teacherAlreadyExists = await this.teacherRepository.findByEmail(
       dto.email
     );

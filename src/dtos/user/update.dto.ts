@@ -17,4 +17,4 @@ export const updateSchema = z
     "É preciso informar pelo menos 1 informação para atualizar."
   );
 
-export type UpdateTeacherDTO = z.infer<typeof updateSchema>;
+export type UpdateUserDTO = z.infer<typeof updateSchema>;

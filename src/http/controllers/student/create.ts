@@ -1,16 +1,16 @@
 import { createSchema } from "@/dtos/user/create.dto";
-import { PrismaTeacherRepository } from "@/repositories/prisma/teacher.repository";
-import { CreateTeacherUseCase } from "@/use-cases/teacher/create.use-case";
+import { PrismaStudentRepository } from "@/repositories/prisma/student.repository";
+import { CreateStudentUseCase } from "@/use-cases/student/create.use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 
-export async function createTeacher(
+export async function createStudent(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
   const dto = createSchema.parse(request.body);
 
-  const repository = new PrismaTeacherRepository();
-  const useCase = new CreateTeacherUseCase(repository);
+  const repository = new PrismaStudentRepository();
+  const useCase = new CreateStudentUseCase(repository);
 
   const teacher = await useCase.handler(dto);
   return reply.status(201).send(teacher);

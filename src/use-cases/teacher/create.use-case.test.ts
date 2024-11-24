@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateTeacherUseCase } from "./create.use-case";
 import { InMemoryTeacherRepository } from "@/repositories/in-memory/teacher.repository";
-import { CreateTeacherDTO } from "@/dtos/teacher/create.dto";
+import { CreateUserDTO } from "@/dtos/user/create.dto";
 import { ResourceAlreadyExistsError } from "@/errors/resource-already-exists-error";
 
 describe("CreateTeacherUseCase", () => {
@@ -15,7 +15,7 @@ describe("CreateTeacherUseCase", () => {
 
   it("should create teacher", async () => {
     // Arrange
-    const newTeacher: CreateTeacherDTO = {
+    const newTeacher: CreateUserDTO = {
       email: "fake@email.com",
       name: "Fake Name",
       password: "123456789",
@@ -34,7 +34,7 @@ describe("CreateTeacherUseCase", () => {
 
   it("should throw ResourceAlreadyExistsError when exists teacher with the same email", async () => {
     // Arrange
-    const newTeacher: CreateTeacherDTO = {
+    const newTeacher: CreateUserDTO = {
       email: "teacher1@email.com",
       name: "Fake Name",
       password: "123456789",

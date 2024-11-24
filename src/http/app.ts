@@ -11,6 +11,7 @@ import swagger from "@fastify/swagger";
 import swaggerUI from "@fastify/swagger-ui";
 import { definitions } from "@/utils/swagger-definitions";
 import cors from "@fastify/cors";
+import { studentRoutes } from "./controllers/student/routes";
 
 export const app = fastify();
 
@@ -59,6 +60,10 @@ app.register(swagger, {
         name: "Category",
         description: "Endpoints relacionados a categorias",
       },
+      {
+        name: "Student",
+        description: "Endpoints relacionados a alunos",
+      },
     ],
     definitions,
   },
@@ -92,6 +97,7 @@ app.register(authRoutes);
 app.register(teacherRoutes);
 app.register(postRoutes);
 app.register(categoryRoutes);
+app.register(studentRoutes);
 
 app.ready((err) => {
   if (err) throw err;

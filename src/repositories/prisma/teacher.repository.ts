@@ -1,7 +1,7 @@
 import { Teacher } from "@prisma/client";
 import { ITeacherRepository } from "../interfaces/teacher.repository.interface";
 import { prisma } from "@/lib/prisma/client";
-import { CreateTeacherDTO } from "@/dtos/teacher/create.dto";
+import { CreateUserDTO } from "@/dtos/user/create.dto";
 
 export class PrismaTeacherRepository implements ITeacherRepository {
   getAll(): Promise<Teacher[]> {
@@ -23,7 +23,7 @@ export class PrismaTeacherRepository implements ITeacherRepository {
     });
   }
 
-  create(teacher: CreateTeacherDTO): Promise<Teacher> {
+  create(teacher: CreateUserDTO): Promise<Teacher> {
     return prisma.teacher.create({
       data: teacher,
     });

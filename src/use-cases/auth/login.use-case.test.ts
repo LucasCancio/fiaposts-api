@@ -2,14 +2,17 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { LoginUseCase } from "./login.use-case";
 import { InMemoryTeacherRepository } from "@/repositories/in-memory/teacher.repository";
 import { InvalidCredentialsError } from "@/errors/invalid-credentials-error";
+import { InMemoryStudentRepository } from "@/repositories/in-memory/student.repository";
 
 describe("Login use case", () => {
-  let repository: InMemoryTeacherRepository;
+  let teacherRepository: InMemoryTeacherRepository;
+  let studentRepository: InMemoryStudentRepository;
   let useCase: LoginUseCase;
 
   beforeEach(() => {
-    repository = new InMemoryTeacherRepository();
-    useCase = new LoginUseCase(repository);
+    teacherRepository = new InMemoryTeacherRepository();
+    studentRepository = new InMemoryStudentRepository();
+    useCase = new LoginUseCase(teacherRepository, studentRepository);
   });
 
   it("should return an user when the credentials are valid", async () => {

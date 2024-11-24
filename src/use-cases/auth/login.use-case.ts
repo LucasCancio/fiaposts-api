@@ -2,12 +2,18 @@ import { ITeacherRepository } from "@/repositories/interfaces/teacher.repository
 import { InvalidCredentialsError } from "../../errors/invalid-credentials-error";
 import { LoginDTO } from "@/dtos/auth/login.dto";
 import { compare } from "bcryptjs";
+import { IStudentRepository } from "@/repositories/interfaces/student.repository.interface";
 
 export class LoginUseCase {
-  constructor(private readonly teacherRepository: ITeacherRepository) {}
+  constructor(
+    private readonly teacherRepository: ITeacherRepository,
+    private readonly studentRepository: IStudentRepository
+  ) {}
 
   async handler(dto: LoginDTO) {
-    const user = await this.teacherRepository.findByEmail(dto.email);
+    const user = dto.isTeacher
+      ? await this.teacherRepository.findByEmail(dto.email)
+      : await this.studentRepository.findByEmail(dto.email);
 
     if (!user) throw new InvalidCredentialsError();
 

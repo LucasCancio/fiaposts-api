@@ -6,4 +6,4 @@ export const createSchema = z.object({
   password: z.string().min(6, "A senha deve conter no mínimo 6 caracteres."),
 });
 
-export type CreateTeacherDTO = z.infer<typeof createSchema>;
+export type CreateUserDTO = z.infer<typeof createSchema>;

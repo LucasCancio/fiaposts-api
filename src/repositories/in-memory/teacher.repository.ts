@@ -1,6 +1,6 @@
 import { Teacher } from "@prisma/client";
 import { ITeacherRepository } from "../interfaces/teacher.repository.interface";
-import { CreateTeacherDTO } from "@/dtos/teacher/create.dto";
+import { CreateUserDTO } from "@/dtos/user/create.dto";
 
 export class InMemoryTeacherRepository implements ITeacherRepository {
   public teachers: Teacher[] = [
@@ -44,7 +44,7 @@ export class InMemoryTeacherRepository implements ITeacherRepository {
     return Promise.resolve(teacher || null);
   }
 
-  create(teacher: CreateTeacherDTO): Promise<Teacher> {
+  create(teacher: CreateUserDTO): Promise<Teacher> {
     const teacherCreated: Teacher = {
       id: this.teachers.length + 1,
       name: teacher.name,

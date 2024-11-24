@@ -1,10 +1,10 @@
 import { updateSchema } from "@/dtos/user/update.dto";
-import { PrismaTeacherRepository } from "@/repositories/prisma/teacher.repository";
-import { UpdateTeacherUseCase } from "@/use-cases/teacher/update.use-case";
+import { PrismaStudentRepository } from "@/repositories/prisma/student.repository";
+import { UpdateStudentUseCase } from "@/use-cases/student/update.use-case";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 
-export async function updateTeacher(
+export async function updateStudent(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
@@ -15,8 +15,8 @@ export async function updateTeacher(
     })
     .parse(request.params);
 
-  const repository = new PrismaTeacherRepository();
-  const useCase = new UpdateTeacherUseCase(repository);
+  const repository = new PrismaStudentRepository();
+  const useCase = new UpdateStudentUseCase(repository);
   const teacher = await useCase.handler(id, dto);
   return reply.status(200).send(teacher);
 }
